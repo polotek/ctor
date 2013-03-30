@@ -1,0 +1,28 @@
+{
+  "name": "ctor",
+  "version": "0.0.1",
+  "description": "A simple and familiar prototypal system",
+  "author": "polotek (Marco Rogers)",
+  "main": "index.js",
+  "scripts": {
+    "test": "node tests.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/polotek/ctor.git"
+  },
+  "keywords": [
+    "create",
+    "extend",
+    "prototype",
+    "inheritance"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "inherits": "~1.0",
+    "otools": "*"
+  },
+  "devDependencies": {
+    "tape": "*"
+  }
+}
