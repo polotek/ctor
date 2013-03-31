@@ -47,20 +47,20 @@ function extend(proto) {
       , tmp;
 
     if(!(obj instanceof ctor)) {
-      obj = Object.create(ctor);
+      obj = Object.create(ctor.prototype);
     }
 
     parent.apply(obj, arguments);
 
     if(base) {
       tmp = base.apply(obj, arguments);
-      if(tmp) { obj = tmp; }
+      if(tmp !== undefined) { obj = tmp; }
     }
 
     return obj;
-  }
+  };
 
-  inherits(ctor, parent, proto)
+  inherits(ctor, parent, proto);
 
   mixin(ctor, Ctor);
 
