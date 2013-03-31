@@ -3,7 +3,7 @@ ctor
 
 A simple and familiar prototypal system.
 
-```
+```js
 var Ctor = require('ctor');
 
 var Person = Ctor.extend({
