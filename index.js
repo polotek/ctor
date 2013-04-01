@@ -10,28 +10,22 @@ function Ctor() {
 }
 
 function createObj(ctor, args) {
-  var obj
-    , tmp;
+  var obj = Object.create(ctor.prototype);
 
-  obj = Object.create(ctor.prototype);
-
-  tmp = ctor.apply(obj, args);
-
-  // Always allow the constructor return value to override
-  if(tmp !== undefined) { obj = tmp; }
+  ctor.apply(obj, args);
 
   return obj;
 }
 
 function create() {
-  if(typeof this !== 'function') { throw new Error('create expects "this" to be a function'); }
+  if(typeof this !== 'function') { throw new Error('create expects "this" to be a ctor function'); }
 
   var args = arguments.length ? slice.call(arguments) : undefined;
   return createObj(this, args);
 }
 
 function extend(proto) {
-  if(typeof this !== 'function') { throw new Error('extend expects "this" to be a function'); }
+  if(typeof this !== 'function') { throw new Error('extend expects "this" to be a ctor function'); }
 
   var parent = this
     , ctor
@@ -43,24 +37,22 @@ function extend(proto) {
   }
 
   ctor = function() {
-    var obj = this
-      , tmp;
+    var obj = this;
 
     if(!(obj instanceof ctor)) {
-      obj = Object.create(ctor);
+      obj = Object.create(ctor.prototype);
     }
 
     parent.apply(obj, arguments);
 
     if(base) {
-      tmp = base.apply(obj, arguments);
-      if(tmp) { obj = tmp; }
+      base.apply(obj, arguments);
     }
 
     return obj;
-  }
+  };
 
-  inherits(ctor, parent, proto)
+  inherits(ctor, parent, proto);
 
   mixin(ctor, Ctor);
 

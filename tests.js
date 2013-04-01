@@ -1,5 +1,5 @@
 var Ctor = require('./index')
-  , test = require('tape')
+  , test = require('tape');
 
 test('ctor creates a simple constructor', function(t) {
   var Person = Ctor.extend({
@@ -8,7 +8,7 @@ test('ctor creates a simple constructor', function(t) {
       this.nickname = nickname;
     }
     , sayHello: function() {
-      return "Hey, I'm " + this.name + '. But you can call me ' + this.nickname; 
+      return "Hey, I'm " + this.name + '. But you can call me ' + this.nickname;
     }
   });
 
@@ -29,13 +29,64 @@ test('ctor creates a simple constructor', function(t) {
 
   var e = Employee.create('Marco', 'polotek', 'Acme Novelties');
 
-  t.equal(e.sayHello(), 'Hello, my name is Marco. I work at Acme Novelties')
+  t.equal(e.sayHello(), 'Hello, my name is Marco. I work at Acme Novelties');
 
-  t.ok(p instanceof Person)
-  t.equal(p.sayHello, Person.prototype.sayHello)
-  t.ok(e instanceof Employee)
-  t.ok(e instanceof Person)
-  t.ok(e.__proto__ instanceof Person)
+  t.ok(p instanceof Person);
+  t.equal(p.sayHello, Person.prototype.sayHello);
+  t.ok(e instanceof Employee);
+  t.ok(e instanceof Person);
+  var proto = Object.getPrototypeOf(e);
+  t.ok(proto instanceof Person);
+  t.notEqual(proto, Person.prototype);
 
-  t.end()
-})
+  t.end();
+});
+
+test('ctor still supports "new" but doesn\'t need it', function(t) {
+  t.plan(6);
+
+  var Person = Ctor.extend({
+    constructor: function Person(name, nickname) {
+      this.name = name;
+      this.nickname = nickname;
+
+      t.pass();
+    }
+    , sayHello: function() {
+      return "Hey, I'm " + this.name + '. But you can call me ' + this.nickname;
+    }
+  });
+
+  var p = new Person('Marco', 'polotek');
+  t.ok(p instanceof Ctor);
+  t.equal(p.sayHello, Person.prototype.sayHello);
+
+  p = Person('Marco', 'polotek');
+  t.ok(p instanceof Ctor);
+  t.equal(p.sayHello, Person.prototype.sayHello);
+
+  t.end();
+});
+
+test('ctor adds non-enumerable "contructor" property to prototype', function(t) {
+  var Person = Ctor.extend({
+    constructor: function Person(name, nickname) {
+      this.name = name;
+      this.nickname = nickname;
+    }
+    , sayHello: function() {
+      return "Hey, I'm " + this.name + '. But you can call me ' + this.nickname;
+    }
+  });
+
+  var p = Person.create('Marco', 'polotek')
+    , proto = Object.getPrototypeOf(p);
+
+  t.equal(p.hasOwnProperty('constructor'), false);
+  t.equal(proto.constructor, Person);
+
+  var desc = Object.getOwnPropertyDescriptor(proto, 'constructor');
+  t.equal(desc.enumerable, false);
+
+  t.end();
+});
