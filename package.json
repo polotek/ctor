@@ -23,6 +23,8 @@
     "otools": "*"
   },
   "devDependencies": {
-    "tape": "*"
+    "tape": "*",
+    "uglify-js": "2.2.x",
+    "browserify": "2.11.x"
   }
 }
