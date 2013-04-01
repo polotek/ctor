@@ -12,7 +12,7 @@ var Person = Ctor.extend({
     this.nickname = nickname;
   }
   , sayHello: function() {
-    return "Hey, I'm " this.name + '. But you can call me ' + this.nickname; 
+    return "Hey, I'm " + this.name + '. But you can call me ' + this.nickname; 
   }
 });
 
