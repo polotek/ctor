@@ -62,8 +62,31 @@ test('ctor still supports "new" but doesn\'t need it', function(t) {
   t.equal(p.sayHello, Person.prototype.sayHello);
 
   p = Person('Marco', 'polotek');
-  t.ok(p instanceof Person);
+  t.ok(p instanceof Ctor);
   t.equal(p.sayHello, Person.prototype.sayHello);
+
+  t.end();
+});
+
+test('ctor adds non-enumerable "contructor" property to prototype', function(t) {
+  var Person = Ctor.extend({
+    constructor: function Person(name, nickname) {
+      this.name = name;
+      this.nickname = nickname;
+    }
+    , sayHello: function() {
+      return "Hey, I'm " + this.name + '. But you can call me ' + this.nickname;
+    }
+  });
+
+  var p = Person.create('Marco', 'polotek')
+    , proto = Object.getPrototypeOf(p);
+
+  t.equal(p.hasOwnProperty('constructor'), false);
+  t.equal(proto.constructor, Person);
+
+  var desc = Object.getOwnPropertyDescriptor(proto, 'constructor');
+  t.equal(desc.enumerable, false);
 
   t.end();
 });
