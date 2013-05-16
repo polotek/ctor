@@ -11,6 +11,11 @@ var Person = Ctor.extend({
     this.name = args['name'];
     this.nickname = args['nickname'];
   }
+
+  , names: function() {
+    return name + "[" + nickname + "]";
+  }
+
   , sayHello: function() {
     return "Hey, I'm " + this.name + '. But you can call me ' + this.nickname; 
   }
@@ -35,11 +40,27 @@ var e = Employee.create({name: 'Marco', nickname: 'polotek', job: 'Acme Noveltie
 
 console.log(e.sayHello()); // 'Hello, my name is Marco. I work at Acme Novelties'
 
+var MarcoGhost = p.extend({
+  constructor: function MarcoGhost(args) {
+    this.cheers = args['cheers'];
+  }
+  , sayHello: function() {
+    this.deep();
+    return this.cheers + ", I am the ghost of " + this.name;
+  }
+});
+ 
+var mg = MarcoGhost.create({ cheers: 'whooooo'});
+
+console.log(mg.sayHello()); // 'whooooo, I am the ghost of Marco
+
 // (p instanceof Person) === true
 // p.sayHello === Person.prototype.sayHello
 // (e instanceof Employee) === true
 // (e instanceof Person) === true
 // (e.__proto__ instanceof Person) === true
+// (mg instanceof Person) === true
+// mg.names === Person.prototype.names
 ```
 
 `ctor` is a really simple prototypal object system that codefies a few simple constructs that I like.
