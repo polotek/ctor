@@ -7,23 +7,28 @@ A simple and familiar prototypal system.
 var Ctor = require('ctor');
 
 var Person = Ctor.extend({
-  constructor: function Person(name, nickname) {
-    this.name = name;
-    this.nickname = nickname;
+  constructor: function Person(args) {
+    this.name = args['name'];
+    this.nickname = args['nickname'];
   }
+
+  , names: function() {
+    return name + "[" + nickname + "]";
+  }
+
   , sayHello: function() {
     return "Hey, I'm " + this.name + '. But you can call me ' + this.nickname; 
   }
 });
 
-var p = Person.create('Marco', 'polotek');
+var p = Person.create({name: 'Marco', nickname: 'polotek'});
 
 console.log(p.sayHello()); // Hey, I'm Marco. But you can call me polotek
 
 var Employee = Person.extend({
-  constructor: function Employee(name, nickname, job) {
+  constructor: function Employee(args) {
     // The person constructor has already been called
-    this.job = job;
+    this.job = args['job'];
   }
   , sayHello: function() {
     // No concept of "super". If you want a super call, be explicit
@@ -31,15 +36,31 @@ var Employee = Person.extend({
   }
 });
 
-var e = Employee.create('Marco', 'polotek', 'Acme Novelties');
+var e = Employee.create({name: 'Marco', nickname: 'polotek', job: 'Acme Novelties'});
 
 console.log(e.sayHello()); // 'Hello, my name is Marco. I work at Acme Novelties'
+
+var MarcoGhost = p.extend({
+  constructor: function MarcoGhost(args) {
+    this.cheers = args['cheers'];
+  }
+  , sayHello: function() {
+    this.deep();
+    return this.cheers + ", I am the ghost of " + this.name;
+  }
+});
+ 
+var mg = MarcoGhost.create({ cheers: 'whooooo'});
+
+console.log(mg.sayHello()); // 'whooooo, I am the ghost of Marco
 
 // (p instanceof Person) === true
 // p.sayHello === Person.prototype.sayHello
 // (e instanceof Employee) === true
 // (e instanceof Person) === true
 // (e.__proto__ instanceof Person) === true
+// (mg instanceof Person) === true
+// mg.names === Person.prototype.names
 ```
 
 `ctor` is a really simple prototypal object system that codefies a few simple constructs that I like.

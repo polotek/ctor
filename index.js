@@ -17,11 +17,29 @@ function createObj(ctor, args) {
   return obj;
 }
 
+function extendObject(proto){
+  var temp = Object.create(this);
+
+  for(var prop in proto){
+      temp[prop] = proto[prop];
+  }
+  temp.contructor=proto.constructor;
+
+  temp.create = function (args) {
+    this.contructor(args);
+    return this;
+  }
+
+  return temp;
+}
+
 function create() {
   if(typeof this !== 'function') { throw new Error('create expects "this" to be a ctor function'); }
 
   var args = arguments.length ? slice.call(arguments) : undefined;
-  return createObj(this, args);
+  newObj = createObj(this, args);
+  newObj.extend = extendObject;
+  return newObj;
 }
 
 function extend(proto) {

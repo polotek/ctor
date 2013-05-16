@@ -90,3 +90,35 @@ test('ctor adds non-enumerable "contructor" property to prototype', function(t) 
 
   t.end();
 });
+
+test('ctor extend objects', function(t) {
+  var Person = Ctor.extend({
+    constructor: function Person(name, nickname) {
+      this.name = name;
+      this.nickname = nickname;
+    }
+    , sayHello: function() {
+      return "Hey, I'm " + this.name + '. But you can call me ' + this.nickname;
+    }
+  });
+
+  var p = Person.create('Marco', 'polotek');
+
+  var MarcoGhost = p.extend({
+    constructor: function MarcoGhost(args) {
+      this.cheers = args['cheers'];
+    }
+                 , sayHello: function() {
+                   return this.cheers + ", I am the ghost of " + this.name;
+                 }
+  });
+
+  var mg = MarcoGhost.create({ cheers: 'whooooo'})
+  , proto = Object.getPrototypeOf(mg);
+
+  t.equal(mg.sayHello(), "whooooo, I am the ghost of Marco");
+  t.equal(proto.constructor, Person);
+
+  t.end();
+
+});
